@@ -18,7 +18,12 @@ const viewAllDepartments = async () => {
 };
 
 const viewAllRoles = async () => {
-    // Similar structure to the above, but fetching roles
+    try {
+        const [rows, fields] = await pool.query('SELECT * FROM  roles');
+        console.table(rows); //display the results in a table format
+    } catch (error) {
+        console.error('Error fetching roles:', error.message);
+    }
 };
 
 const viewAllEmployees = async () => {
@@ -30,7 +35,14 @@ const addDepartment = async (departmentName) => {
 };
 
 const addRole = async (roleData) => {
-    // Use prepared statement to insert a new role
+    try {
+        const { title, salary, departmentId } = roleData;
+        const sql = 'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)';
+        await pool.query(sql, [title, salary, departmentId]);
+        console.log('Role added successfully');
+    } catch (error) {
+        console.error('Error adding role:', error.message);
+    }
 };
 
 const addEmployee = async (employeeData) => {
