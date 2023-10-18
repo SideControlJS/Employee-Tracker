@@ -1,7 +1,17 @@
-const inquirer = require('inquirer');
-const { viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole } = require('./db/queries');
+let inquirer;
+let queries;
+
+const loadModules = async () => {
+    inquirer = await import('inquirer');
+    queries = await import('./db/queries.js');
+};
 
 const init = async () => {
+    // Ensure modules are loaded
+    if (!inquirer || !queries) {
+        await loadModules();
+    }
+
     const { choice } = await inquirer.prompt({
         type: 'list',
         name: 'choice',
@@ -20,25 +30,25 @@ const init = async () => {
 
     switch (choice) {
         case 'View All Departments':
-            await viewAllDepartments();
+            await queries.viewAllDepartments();
             break;
         case 'View All Roles':
-            await viewAllRoles();
+            await queries.viewAllRoles();
             break;
         case 'View All Employees':
-            await viewAllEmployees();
+            await queries.viewAllEmployees();
             break;
         case 'Add a Department':
-            await addDepartment();
+            await queries.addDepartment();
             break;
         case 'Add a Role':
-            await addRole();
+            await queries.addRole();
             break;
         case 'Add an Employee':
-            await addEmployee();
+            await queries.addEmployee();
             break;
         case 'Update an Employee Role':
-            await updateEmployeeRole();
+            await queries.updateEmployeeRole();
             break;
         default:
             process.exit();
@@ -48,3 +58,4 @@ const init = async () => {
 };
 
 init();
+
