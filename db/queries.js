@@ -27,11 +27,29 @@ const viewAllRoles = async () => {
 };
 
 const viewAllEmployees = async () => {
-    // Similar structure, fetching employees
+    try {
+        const sql = `
+            SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS department, roles.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager 
+            FROM employees 
+            LEFT JOIN roles ON employees.role_id = roles.id
+            LEFT JOIN departments ON roles.department_id = departments.id
+            LEFT JOIN employees manager ON employees.manager_id = manager.id;
+        `;
+        const [rows] = await pool.query(sql);
+        console.table(rows);
+    } catch (error) {
+        console.error('Error fetching employees:', error.message);
+    }
 };
 
 const addDepartment = async (departmentName) => {
-    // Use prepared statement to insert a new department
+    try {
+        const sql = 'INSERT INTO departments (name) VALUES (?)';
+        await pool.query(sql, [departmentName]);
+        console.log('Department added successfully.');
+    } catch (error) {
+        console.error('Error adding department:', error.message);
+    }
 };
 
 const addRole = async (roleData) => {
@@ -46,12 +64,27 @@ const addRole = async (roleData) => {
 };
 
 const addEmployee = async (employeeData) => {
-    // Use prepared statement to insert a new employee
+    try {
+        const { firstName, lastName, roleId, managerId } = employeeData;
+        const sql = 'INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)';
+        await pool.query(sql, [firstName, lastName, roleId, managerId]);
+        console.log('Employee added successfully.');
+    } catch (error) {
+        console.error('Error adding employee:', error.message);
+    }
 };
 
+
 const updateEmployeeRole = async (employeeId, newRoleId) => {
-    // Use prepared statement to update an employee's role
+    try {
+        const sql = 'UPDATE employees SET role_id = ? WHERE id = ?';
+        await pool.query(sql, [newRoleId, employeeId]);
+        console.log('Employee role updated successfully.');
+    } catch (error) {
+        console.error('Error updating employee role:', error.message);
+    }
 };
+
 
 // Export functions for use in the main program
 export { viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };
