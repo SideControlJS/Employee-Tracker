@@ -8,6 +8,27 @@ const pool = mysql.createPool({
     database: 'employee_tracker' 
 });
 
+const getAllDepartments = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM departments');
+        return rows; 
+    } catch (error) {
+        console.error('Error fetching departments:', error.message);
+    }
+    return [];
+};
+
+const getAllRoles = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM roles');
+        return rows;
+    } catch (error) {
+        console.error('Error fetching roles:', error.message);
+    }
+    return [];
+};
+
+
 const viewAllDepartments = async () => {
     try {
         const [rows, fields] = await pool.query('SELECT * FROM departments');
@@ -87,4 +108,4 @@ const updateEmployeeRole = async (employeeId, newRoleId) => {
 
 
 // Export functions for use in the main program
-export { viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };
+export { getAllDepartments, getAllRoles, viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };
