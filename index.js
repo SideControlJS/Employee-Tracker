@@ -1,8 +1,9 @@
 import inquirer from 'inquirer';
 import * as queries from './db/queries.js';
+import { addEmployeePrompt } from './prompts.js';
 
 const promptAddDepartment = async () => {
-    const { name } = await inquirer.promt({
+    const { name } = await inquirer.prompt({
         type: 'input',
         name: 'name',
         message: 'Enter the name of the new department:',
@@ -72,11 +73,11 @@ const init = async () => {
             await queries.addRole(roleData);
             break;
         case 'Add an Employee':
-            const employeeData = await promptAddEmployee();
+            const employeeData = await addEmployeePrompt();
             await queries.addEmployee(employeeData);
             break;
         case 'Update an Employee Role':
-            const { employeeId, newRoleId } = await promptUpdateEmployeeRole();
+            const { employeeId, newRoleId } = await updateEmployeeRolePrompt();
             await queries.updateEmployeeRole(employeeId, newRoleId);
             break;
         default:
