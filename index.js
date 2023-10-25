@@ -1,10 +1,5 @@
-let inquirer;
-let queries;
-
-const loadModules = async () => {
-    inquirer = await import('inquirer');
-    queries = await import('./db/queries.js');
-};
+import inquirer from 'inquirer';
+import * as queries from './db/queries.js';
 
 const promptAddDepartment = async () => {
     const { name } = await inquirer.promt({
@@ -57,26 +52,6 @@ const promptAddRole = async () => {
 
 
 const init = async () => {
-    // Ensure modules are loaded
-    if (!inquirer || !queries) {
-        await loadModules();
-    }
-
-    const { choice } = await inquirer.prompt({
-        type: 'list',
-        name: 'choice',
-        message: 'What would you like to do?',
-        choices: [
-            'View All Departments',
-            'View All Roles',
-            'View All Employees',
-            'Add a Department',
-            'Add a Role',
-            'Add an Employee',
-            'Update an Employee Role',
-            'Exit'
-        ]
-    });
 
     switch (choice) {
         case 'View All Departments':
