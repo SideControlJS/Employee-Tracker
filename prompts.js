@@ -1,19 +1,11 @@
 import inquirer from 'inquirer';
 
-export const addDepartmentPrompt = async () => {
-    return inquirer.prompt({
-        type: 'input',
-        name: 'departmentName',
-        message: 'Enter the name of the new department:',
-        validate: input => input ? true : 'Department name cannot be empty'
-    });
-};
-
-const { choice } = await inquirer.prompt({
-    type: 'list',
-    name: 'choice',
-    message: 'What would you like to do?',
-    choices: [
+export const mainMenuPrompt = async () => {
+    const { choice } = await inquirer.prompt({
+      type: 'list',
+      name: 'choice',
+      message: 'What would you like to do?',
+      choices: [
         'View All Departments',
         'View All Roles',
         'View All Employees',
@@ -22,30 +14,47 @@ const { choice } = await inquirer.prompt({
         'Add an Employee',
         'Update an Employee Role',
         'Exit'
-    ]
-});
+      ]
+    });
+    return choice;
+  };
+
+export const addDepartmentPrompt = async () => {
+    const { departmentName } = await inquirer.prompt({
+        type: 'input',
+        name: 'departmentName',
+        message: 'Enter the name of the new department:',
+        validate: input => input ? true : 'Department name cannot be empty!'
+    });
+    return departmentName;
+};
+
 
 export const addRolePrompt = async () => {
-    return inquirer.prompt([
+    const departments = await getAllDepartments();
+    const departmentChoices = departments.map(dept => ({ name: dept.name, value: dept.id }));
+
+    const { title, salary, departmentId } = await inquirer.prompt([
         {
             type: 'input',
             name: 'title',
-            message: 'Enter the title of the new role:',
+            message: 'Enter the title of the role',
             validate: input => input ? true : 'Role title cannot be empty'
         },
         {
             type: 'input',
             name: 'salary',
-            message: 'Enter the salary for the new role:',
-            validate: input => !isNaN(input) ? true : 'Please enter a valid number'
+            message: 'Enter the title of the role',
+            validate: input => !isNaN(input) && input > 0 ? true : 'Please enter a valid salary!'
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'departmentId',
-            message: 'Enter the department ID for the new role:',
-            validate: input => !isNaN(input) ? true : 'Please enter a valid department ID'
+            message: 'Choose the department for the role:',
+            choices: departmentChoices
         }
     ]);
+    return { title, salary, departmentId };
 };
 
 export const addEmployeePrompt = async () => {
