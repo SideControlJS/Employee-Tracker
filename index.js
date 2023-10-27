@@ -2,7 +2,7 @@ import inquirer from 'inquirer';
 import * as queries from './db/queries.js';
 import { addEmployeePrompt } from './prompts.js';
 
-const promptAddDepartment = async () => {
+const addDepartmentPrompt = async () => {
     const { name } = await inquirer.prompt({
         type: 'input',
         name: 'name',
@@ -12,14 +12,14 @@ const promptAddDepartment = async () => {
     return name;
 }
 
-const promptAddRole = async () => {
+const addRolePrompt = async () => {
     const departments = await queries.getAllDepartments();
     const departmentChoices = departments.map(dept => ({
         name: dept.name,
         value: dept.id  
     }));
     
-    const responses = await inquirer.promt([
+    const responses = await inquirer.prompt([
         {
             type: 'input', 
             name: 'title',
@@ -65,11 +65,11 @@ const init = async () => {
             await queries.viewAllEmployees();
             break;
         case 'Add a Department':
-            const departmentName = await promptAddDepartment();
+            const departmentName = await addDepartmentPrompt();
             await queries.addDepartment(departmentName);
             break;
         case 'Add a Role':
-            const roleData = await promptAddRole();
+            const roleData = await addRolePrompt();
             await queries.addRole(roleData);
             break;
         case 'Add an Employee':
