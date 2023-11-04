@@ -1,4 +1,4 @@
-import * as queries from './db/queries.js';
+import * as queries from '../db/queries.js';
 import * as prompts from './prompts.js';
 
 
@@ -10,9 +10,19 @@ const init = async () => {
         case 'View All Departments':
           await queries.viewAllDepartments();
           break;
+        case 'View All Roles':
+          await queries.viewAllRoles();
+          break;
+        case 'View All Employees':
+          await queries.viewAllEmployees();
+          break;
         case 'Add a Department':
           const departmentName = await prompts.addDepartmentPrompt();
           await queries.addDepartment(departmentName);
+          break;
+        case 'Add an Employee':
+          const employeeName = await prompts.addEmployeePrompt();
+          await queries.addEmployee();
           break;
         case 'Add a Role':
           const roleData = await prompts.addRolePrompt();

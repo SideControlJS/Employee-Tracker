@@ -1,4 +1,5 @@
 import inquirer from 'inquirer';
+import { getAllDepartments, getAllRoles,  } from './db/queries';
 
 export const mainMenuPrompt = async () => {
     const { choice } = await inquirer.prompt({
