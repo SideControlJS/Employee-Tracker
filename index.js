@@ -1,4 +1,4 @@
-import * as queries from '../db/queries.js';
+import * as queries from '../Employee-Tracker/db/queries.js';
 import * as prompts from './prompts.js';
 
 
@@ -22,7 +22,7 @@ const init = async () => {
           break;
         case 'Add an Employee':
           const employeeName = await prompts.addEmployeePrompt();
-          await queries.addEmployee();
+          await queries.addEmployee(employeeName);
           break;
         case 'Add a Role':
           const roleData = await prompts.addRolePrompt();
