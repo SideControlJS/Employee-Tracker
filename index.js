@@ -1,5 +1,7 @@
-import * as queries from '../Employee-Tracker/db/queries.js';
-import * as prompts from './prompts.js';
+import * as queries from '../db/queries.js';
+import { mainMenuPrompt } from './prompts.js';
+
+
 
 
 const init = async () => {

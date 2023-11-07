@@ -20,6 +20,10 @@ export const mainMenuPrompt = async () => {
     return choice;
   };
 
+export const viewAllEmployeesPrompt = async () => {
+    const {  }
+}
+
 export const addDepartmentPrompt = async () => {
     const { departmentName } = await inquirer.prompt({
         type: 'input',
