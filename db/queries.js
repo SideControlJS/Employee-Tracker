@@ -28,6 +28,16 @@ const getAllRoles = async () => {
     return [];
 };
 
+const getAllEmployees = async () => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM employee');
+        return rows;
+    } catch (error) {
+        console.error('Error fetching employee:', error.message);
+    }
+    return [];
+}
+
 
 const viewAllDepartments = async () => {
     try {
@@ -108,4 +118,4 @@ const updateEmployeeRole = async (employeeId, newRoleId) => {
 
 
 // Export functions for use in the main program
-export { getAllDepartments, getAllRoles, viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };
+export { getAllDepartments, getAllRoles, getAllEmployees, viewAllDepartments, viewAllRoles, viewAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };

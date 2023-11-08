@@ -1,5 +1,8 @@
 import inquirer from 'inquirer';
 import {
+  getAllDepartments,
+  getAllRoles,
+  getAllEmployees,
   viewAllDepartments,
   viewAllRoles,
   viewAllEmployees,
@@ -7,7 +10,7 @@ import {
   addRole,
   addEmployee,
   updateEmployeeRole,
-  getAllRoles,
+  
   // Import other necessary functions from queries.js
 } from './db/queries.js';
 
@@ -67,8 +70,7 @@ const promptAddDepartment = async () => {
 };
 
 const promptAddRole = async () => {
-  // Assume that getDepartments is a function that returns an array of departments
-  const departments = await getDepartments(); // You need to implement this in queries.js
+  const departments = await getAllDepartments(); 
   const departmentChoices = departments.map(dept => ({ name: dept.name, value: dept.id }));
   const { title, salary, departmentId } = await inquirer.prompt([
     // Add prompts for role title and salary
@@ -77,25 +79,67 @@ const promptAddRole = async () => {
 };
 
 const promptAddEmployee = async () => {
-  const roles = await getAllRoles(); // Don't forget to implement in queries.js
+  const roles = await getAllRoles(); 
   const roleChoices = roles.map(role => ({ name: role.title, value: role.id}));
-  // Assume getEmployees is a function to get possible managers (or implement a similar logic)
-  const managers = await getEmployees(); // Don't forget to implement this in queries.js
-  const managerChoices = managers.map(manager => ({ name: manager.first_name + " " + manager.last_name, value: manager.id }));
+
+  // option for creating a new role
+
+  const managers = await getAllEmployees(); 
+  const managerChoices = managers.map(manager => ({ name: `${manager.first_name} ${manager.last_name}`, value: manager.id }));
 
   const  { firstName, lastName, roleId, managerId } = await inquirer.prompt([
     {
         type: 'input',
         name: 'firstName',
         message: 'Enter the first name of the new employee:'
-
+        //validation
+    },
+    {
+      type: 'input',
+      name: 'lastName',
+      message: 'Enter the last name of the new employee:'
+      //validation
+    },
+    {
+      type: 'list',
+      name: 'roleId',
+      message: 'Select the role for the new employee',
+      choices: roleChoices
+    },
+    {
+      type: 'list',
+      name: 'managerId',
+      message: 'Select the role for the new employee',
+      choices: managerChoices,
+      when: managers.length > 0 // only show this prompt if there are managers to choose from
     }
-  ])
+  ]);
 
+  await addEmployee({ firstName, lastName, roleId, managerId });
 };
 
 const promptUpdateEmployeeRole = async () => {
-  // Similar structure to promptAddRole, but for updating an employee's role
+  const employee = await getEmployees(); // implement this in queries.js
+  const employeeChoices = employee.map(emp => ({ name: emp.first_name + " " + emp.last_name, value: emp.id }));
+  const roles = await getAllRoles(); // implement this in queries.js
+  const roleChoices = roles.map(role => ({ name: role.title, value: role.id }));
+
+  const { employeeId, newRoleId } = await inquirer.prompt([
+    {
+      type: "list",
+      name: 'employeeId',
+      message: 'Select the employee whose role you want to update',
+      choices: employeeChoices
+    },
+    {
+      type: 'list',
+      name: 'newRoleId',
+      message: 'Select the role for the employee',
+      choices: roleChoices
+    }
+  ]);
+
+  await updateEmployeeRole(employeeId, newRoleId);
 };
 
 // Start the application
