@@ -42,7 +42,7 @@ const getAllEmployees = async () => {
 const viewAllDepartments = async () => {
     try {
         const [rows, fields] = await pool.query('SELECT * FROM department');
-        console.table(rows);  // Display the results in a table format
+        console.table(rows, fields);  // Display the results in a table format
     } catch (error) {
         console.error('Error fetching department:', error.message);
     }
@@ -51,7 +51,7 @@ const viewAllDepartments = async () => {
 const viewAllRoles = async () => {
     try {
         const [rows, fields] = await pool.query('SELECT * FROM  role');
-        console.table(rows); //display the results in a table format
+        console.table(rows, fields); //display the results in a table format
     } catch (error) {
         console.error('Error fetching roles:', error.message);
     }
