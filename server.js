@@ -83,6 +83,50 @@ const promptAddEmployee = async () => {
   const roleChoices = roles.map(role => ({ name: role.title, value: role.id}));
 
   // option for creating a new role
+  roleChoices.push({ name: 'Create New Role', value: -1 });
+
+  const { roleId } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'roleId',
+      message: 'Select the role for the new employee:',
+      choices: roleChoices
+    }
+  ]);
+
+  //if the user chooses to create a new role, prompt them for the new role details
+  if (roleId === -1) {
+    const departments = await getAllDepartments();
+    const departmentChoices = departments.map(dept => ({ name: dept.name, value: dept.id }));
+    const { title, salary, departmentId } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'title',
+        message: 'Enter the title of the new role',
+        validate: input => input ? true : 'Please enter a title.'
+      },
+      {
+        type: 'input',
+        name: 'salary',
+        message: 'Enter the salary for the new role',
+        validate: input => !isNaN(parseFloat(input)) ? true : 'Please enter a valid salary.'
+      },
+      {
+        type: 'list',
+        name: 'departmentId',
+        message: 'Select the department for the new role: ',
+        choices: departmentChoices
+      }
+    ]);
+
+    // create the new role and return its ID
+    const newRole = await addRole({ title, salary, departmentId });
+    return newRole.id;
+  }
+
+  return roleId;
+
+};  
 
   const managers = await getAllEmployees(); 
   const managerChoices = managers.map(manager => ({ name: `${manager.first_name} ${manager.last_name}`, value: manager.id }));
@@ -116,7 +160,7 @@ const promptAddEmployee = async () => {
   ]);
 
   await addEmployee({ firstName, lastName, roleId, managerId });
-};
+
 
 const promptUpdateEmployeeRole = async () => {
   const employee = await getEmployees(); // implement this in queries.js
