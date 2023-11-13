@@ -24,7 +24,7 @@ This application is a Content Management System (CMS) that allows users to view,
 
 ## Video-Demo
 
-
+[![Watch the demo video](https://watch.screencastify.com/v/ZEsgXmntPAv88GqXVjP0)]
 
 ## Installation
 
