@@ -9,9 +9,11 @@ Employee Tracker is a command-line application to manage a company's employee da
 ## Table of Contents
 
 - [Description](#description)
+- [Video Demo](#video-demo)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
+- [References](#references)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -19,6 +21,10 @@ Employee Tracker is a command-line application to manage a company's employee da
 ## Description
 
 This application is a Content Management System (CMS) that allows users to view, add, and manage employees, roles, and departments in a company's database. It is designed for non-developers to easily interact with information stored in databases.
+
+## Video-Demo
+
+
 
 ## Installation
 
@@ -42,6 +48,11 @@ Follow the on-screen prompts to manage the employee database.
 - Update employee roles
 - Interactive CLI
 - Data persisted in MySQL database
+
+## References
+
+![Source Code](./assets/source-code-screenshot.png)
+
 
 ## Contributing
 
