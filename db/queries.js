@@ -42,7 +42,7 @@ const getAllEmployees = async () => {
 const viewAllDepartments = async () => {
     try {
         const [rows, fields] = await pool.query('SELECT * FROM department');
-        console.table(rows, fields);  // Display the results in a table format
+        console.log(rows, fields);
     } catch (error) {
         console.error('Error fetching department:', error.message);
     }
@@ -51,7 +51,7 @@ const viewAllDepartments = async () => {
 const viewAllRoles = async () => {
     try {
         const [rows, fields] = await pool.query('SELECT * FROM  role');
-        console.table(rows, fields); //display the results in a table format
+        console.log(rows, fields);
     } catch (error) {
         console.error('Error fetching roles:', error.message);
     }
@@ -85,14 +85,15 @@ const addDepartment = async (departmentName) => {
 
 const addRole = async (roleData) => {
     try {
-        const { title, salary, departmentId } = roleData;
-        const sql = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
-        await pool.query(sql, [title, salary, departmentId]);
-        console.log('Role added successfully');
+      const { title, salary, departmentId } = roleData;
+      const sql = 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)';
+      const [result] = await pool.query(sql, [title, salary, departmentId]);
+      console.log('Role added successfully');
+      return result.insertId; // This will return the ID of the newly added role
     } catch (error) {
-        console.error('Error adding role:', error.message);
+      console.error('Error adding role:', error.message);
     }
-};
+  };
 
 const addEmployee = async (employeeData) => {
     try {

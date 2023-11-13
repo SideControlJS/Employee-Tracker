@@ -70,102 +70,96 @@ const promptAddDepartment = async () => {
 };
 
 const promptAddRole = async () => {
+  // Fetch all departments for the user to choose which department the role belongs to
   const departments = await getAllDepartments(); 
   const departmentChoices = departments.map(dept => ({ name: dept.name, value: dept.id }));
-  const { title, salary, departmentId } = await inquirer.prompt([
-    // Add prompts for role title and salary
-  ]);
-  await addRole({ title, salary, departmentId });
-};
 
-const promptAddEmployee = async () => {
-  const roles = await getAllRoles(); 
-  const roleChoices = roles.map(role => ({ name: role.title, value: role.id}));
-
-  // option for creating a new role
-  roleChoices.push({ name: 'Create New Role', value: -1 });
-
-  const { roleId } = await inquirer.prompt([
+  // Ask the user for the new role information
+  const answers = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'title',
+      message: 'What is the title of the new role?',
+      validate: input => input ? true : 'This field is required.'
+    },
+    {
+      type: 'input',
+      name: 'salary',
+      message: 'What is the salary for the new role?',
+      validate: input => {
+        const parsed = parseFloat(input);
+        return (!isNaN(parsed) && parsed > 0) ? true : 'Please enter a valid salary.';
+      }
+    },
     {
       type: 'list',
-      name: 'roleId',
-      message: 'Select the role for the new employee:',
-      choices: roleChoices
+      name: 'departmentId',
+      message: 'Which department does the role belong to?',
+      choices: departmentChoices
     }
   ]);
 
-  //if the user chooses to create a new role, prompt them for the new role details
-  if (roleId === -1) {
-    const departments = await getAllDepartments();
-    const departmentChoices = departments.map(dept => ({ name: dept.name, value: dept.id }));
-    const { title, salary, departmentId } = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'title',
-        message: 'Enter the title of the new role',
-        validate: input => input ? true : 'Please enter a title.'
-      },
-      {
-        type: 'input',
-        name: 'salary',
-        message: 'Enter the salary for the new role',
-        validate: input => !isNaN(parseFloat(input)) ? true : 'Please enter a valid salary.'
-      },
-      {
-        type: 'list',
-        name: 'departmentId',
-        message: 'Select the department for the new role: ',
-        choices: departmentChoices
-      }
-    ]);
+  // Use the answers to add the new role to the database
+  await addRole({
+    title: answers.title,
+    salary: answers.salary,
+    departmentId: answers.departmentId
+  });
 
-    // create the new role and return its ID
-    const newRole = await addRole({ title, salary, departmentId });
-    return newRole.id;
-  }
+  console.log(`Added new role: ${answers.title}`);
+};
 
-  return roleId;
-
-};  
-
-  const managers = await getAllEmployees(); 
-  const managerChoices = managers.map(manager => ({ name: `${manager.first_name} ${manager.last_name}`, value: manager.id }));
-
-  const  { firstName, lastName, roleId, managerId } = await inquirer.prompt([
+const promptAddEmployee = async () => {
+  // Prompt for the new employee's details
+  const { firstName, lastName, roleId, managerId } = await inquirer.prompt([
     {
-        type: 'input',
-        name: 'firstName',
-        message: 'Enter the first name of the new employee:'
-        //validation
+      type: 'input',
+      name: 'firstName',
+      message: 'Enter the first name of the new employee:',
+      validate: input => input ? true : 'First name cannot be empty.'
     },
     {
       type: 'input',
       name: 'lastName',
-      message: 'Enter the last name of the new employee:'
-      //validation
+      message: 'Enter the last name of the new employee:',
+      validate: input => input ? true : 'Last name cannot be empty.'
     },
     {
-      type: 'list',
+      type: 'input',
       name: 'roleId',
-      message: 'Select the role for the new employee',
-      choices: roleChoices
+      message: 'Enter the role ID for the new employee:',
+      validate: input => {
+        const parsed = parseInt(input, 10);
+        return !isNaN(parsed) && parsed > 0 ? true : 'Please enter a valid role ID.';
+      }
     },
     {
-      type: 'list',
+      type: 'input',
       name: 'managerId',
-      message: 'Select the role for the new employee',
-      choices: managerChoices,
-      when: managers.length > 0 // only show this prompt if there are managers to choose from
+      message: 'Enter the manager ID for the new employee (leave blank if no manager):',
+      default: null, // Default to null if no input is provided
+      validate: input => {
+        if (input === '') return true;
+        const parsed = parseInt(input, 10);
+        return !isNaN(parsed) && parsed > 0 ? true : 'Please enter a valid manager ID or leave blank.';
+      },
+      filter: input => {
+        // Convert to null if the input is an empty string, otherwise convert to number
+        return input === '' ? null : parseInt(input, 10);
+      }
     }
   ]);
 
+  // Add the employee to the database
   await addEmployee({ firstName, lastName, roleId, managerId });
+  console.log(`Added new employee: ${firstName} ${lastName}`);
+};
 
 
 const promptUpdateEmployeeRole = async () => {
-  const employee = await getEmployees(); // implement this in queries.js
+  const employee = await getAllEmployees(); 
   const employeeChoices = employee.map(emp => ({ name: emp.first_name + " " + emp.last_name, value: emp.id }));
-  const roles = await getAllRoles(); // implement this in queries.js
+  const roles = await getAllRoles(); 
   const roleChoices = roles.map(role => ({ name: role.title, value: role.id }));
 
   const { employeeId, newRoleId } = await inquirer.prompt([
