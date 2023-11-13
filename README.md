@@ -1,7 +1,7 @@
 # Employee Tracker
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node Version](https://img.shields.io/badge/node-14.17.0-blue.svg)](https://nodejs.org/en/)
+[![Node Version](https://img.shields.io/badge/node-18.17.1-blue.svg)](https://nodejs.org/en/)
 [![Inquirer Version](https://img.shields.io/badge/inquirer-8.2.4-green.svg)](https://www.npmjs.com/package/inquirer/v/8.2.4)
 
 Employee Tracker is a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL.
